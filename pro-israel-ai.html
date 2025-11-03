@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HasbarAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chat-bubble-user {
+            background-color: #3B82F6; /* Blue-600 */
+            color: white;
+        }
+        .chat-bubble-ai {
+            background-color: #E5E7EB; /* Gray-200 */
+            color: #1F2937; /* Gray-800 */
+        }
+        .prose-styles p { margin-bottom: 1rem; }
+        .prose-styles ul { list-style-position: inside; margin-left: 1rem; }
+        .prose-styles li { margin-bottom: 0.5rem; }
+        .prose-styles strong { font-weight: 600; }
+        .prose-styles a { color: #2563EB; text-decoration: underline; }
+        #chat-container::-webkit-scrollbar { width: 8px; }
+        #chat-container::-webkit-scrollbar-track { background: #f1f1f1; }
+        #chat-container::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        #chat-container::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen">
+
+    <header class="bg-white shadow-md p-4 flex items-center space-x-4 sticky top-0 z-10">
+        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="300" height="300" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+<g transform="translate(-250,1300) scale(0.15,-0.15)" fill="#ffffff" stroke="none">
+<path d="M4976 7217 c-77 -127 -214 -356 -304 -507 -91 -151 -228 -378 -305 -503 -77 -125 -137 -230 -134 -233 13 -13 173 40 308 102 72 34 78 39 114 102 21 37 109 184 195 327 86 143 181 301 211 352 30 51 56 93 59 93 3 0 27 -36 54 -80 27 -44 50 -80 52 -80 2 0 32 11 66 25 35 13 89 31 120 40 51 15 57 19 48 35 -5 10 -75 126 -154 259 -80 132 -152 254 -161 270 -8 17 -19 31 -23 31 -4 0 -70 -105 -146 -233z"/>
+<path d="M5440 6779 c-94 -29 -170 -60 -170 -70 0 -21 27 -17 117 15 54 19 111 38 126 41 29 6 33 28 6 32 -8 1 -43 -7 -79 -18z"/>
+<path d="M5475 6676 c-49 -18 -105 -40 -123 -50 -30 -15 -31 -19 -19 -36 13 -18 28 -20 170 -23 l156 -2 -38 70 c-21 38 -42 70 -47 71 -5 1 -49 -12 -99 -30z"/>
+<path d="M4305 6512 c-13 -2 -47 -44 -95 -119 -41 -64 -76 -121 -78 -125 -2 -4 14 -8 36 -8 l40 0 76 121 c42 66 76 122 76 123 0 7 -35 12 -55 8z"/>
+<path d="M3549 6363 c49 -82 131 -218 183 -303 l94 -155 54 3 c55 2 180 19 212 28 13 4 -2 34 -78 156 -52 83 -94 155 -94 159 0 5 37 9 82 11 l83 3 72 115 c40 63 73 118 73 123 0 4 -173 7 -384 7 l-385 0 88 -147z"/>
+<path d="M4363 6433 c-28 -43 -62 -99 -77 -125 l-28 -48 40 0 40 0 71 119 c39 65 71 121 71 125 0 3 -15 6 -34 6 -32 0 -38 -6 -83 -77z"/>
+<path d="M4921 6496 c-6 -7 -45 -64 -86 -127 l-75 -114 27 -3 c21 -3 34 4 54 30 22 26 107 174 127 220 6 14 -35 9 -47 -6z"/>
+<path d="M4960 6400 c-34 -60 -66 -112 -71 -116 -5 -3 -9 -11 -9 -18 0 -27 46 -4 73 37 15 23 51 79 81 125 l54 82 -33 0 c-32 0 -36 -5 -95 -110z"/>
+<path d="M5108 6463 c-37 -50 -117 -177 -121 -194 -1 -6 236 -9 666 -9 367 0 667 -3 667 -7 0 -4 -19 -38 -41 -75 -23 -38 -40 -71 -37 -73 5 -5 188 20 269 37 l57 12 53 90 c101 172 149 257 149 261 0 3 -366 5 -813 5 l-813 0 -36 -47z"/>
+<path d="M5585 6158 c14 -24 29 -48 33 -55 8 -13 295 -23 307 -11 4 4 -7 30 -25 58 l-32 50 -155 0 -154 0 26 -42z"/>
+<path d="M6400 6084 c-58 -12 -123 -23 -145 -23 -22 -1 -45 -5 -51 -9 -12 -9 -118 -192 -113 -196 4 -4 226 27 277 38 31 7 93 79 146 169 33 56 39 55 -114 21z"/>
+<path d="M4495 6009 c-38 -17 -122 -44 -185 -61 -139 -36 -170 -52 -85 -42 117 12 310 78 333 113 18 26 21 27 -63 -10z"/>
+<path d="M5689 5983 c53 -88 100 -166 104 -169 4 -4 212 21 259 32 l27 5 -45 77 c-25 42 -53 83 -62 90 -11 8 -61 12 -164 12 l-147 0 28 -47z"/>
+<path d="M4410 5909 c-130 -39 -239 -59 -400 -72 l-137 -12 68 -119 c38 -65 71 -121 74 -124 2 -3 73 1 157 8 l153 12 93 165 c51 91 92 166 90 167 -2 2 -46 -10 -98 -25z"/>
+<path d="M4021 5889 c-24 -5 -46 -11 -49 -14 -7 -7 116 6 148 16 21 6 18 7 -15 7 -22 0 -60 -4 -84 -9z"/>
+<path d="M6260 5839 c-52 -10 -171 -28 -265 -40 -93 -12 -171 -23 -173 -24 -2 -2 11 -26 29 -54 27 -46 35 -51 58 -47 30 6 399 66 406 66 5 0 75 108 75 115 0 7 -25 4 -130 -16z"/>
+<path d="M6086 5669 c-93 -16 -171 -30 -173 -33 -2 -2 1 -13 8 -24 10 -17 10 -23 0 -36 -17 -21 -8 -21 146 -1 174 22 168 20 202 76 37 60 52 58 -183 18z"/>
+<path d="M4082 5546 l-104 -11 -25 -43 c-14 -24 -24 -44 -22 -46 5 -5 421 43 427 48 2 3 -6 18 -19 35 -22 29 -26 31 -88 30 -36 -1 -113 -7 -169 -13z"/>
+<path d="M6037 5536 l-148 -21 -48 -75 c-96 -152 -123 -203 -104 -197 254 77 308 87 486 94 119 5 147 9 143 20 -3 7 -31 56 -61 108 -65 111 -40 104 -268 71z"/>
+<path d="M4200 5439 c-91 -10 -198 -24 -238 -30 -71 -12 -74 -13 -93 -51 -11 -22 -19 -42 -17 -44 3 -2 20 1 39 7 38 11 296 44 437 54 50 4 92 10 92 13 0 10 -42 72 -48 71 -4 -1 -81 -10 -172 -20z"/>
+<path d="M4308 5336 c-70 -6 -129 -14 -133 -18 -4 -3 15 -42 41 -87 l47 -81 126 0 c69 0 136 -3 149 -6 13 -4 22 -2 22 5 0 13 -113 201 -120 199 -3 0 -62 -6 -132 -12z"/>
+<path d="M3990 5300 c-185 -29 -170 -22 -223 -110 -26 -43 -47 -81 -47 -85 0 -4 15 -3 33 1 17 4 90 14 161 23 l129 16 48 80 c27 44 48 83 49 88 0 10 -16 8 -150 -13z"/>
+<path d="M6168 5293 c7 -3 16 -2 19 1 4 3 -2 6 -13 5 -11 0 -14 -3 -6 -6z"/>
+<path d="M6070 5283 c-123 -13 -378 -92 -398 -123 -16 -27 -6 -25 69 9 77 35 168 63 309 95 98 23 104 28 20 19z"/>
+<path d="M6330 5273 c-14 -2 -62 -8 -107 -14 -46 -6 -83 -15 -83 -19 0 -5 38 -71 85 -148 47 -76 85 -144 85 -150 0 -7 -28 -12 -76 -14 l-76 -3 -78 -122 -79 -123 390 0 391 0 -23 38 c-12 20 -30 48 -39 62 -9 14 -81 132 -160 263 -157 260 -140 244 -230 230z"/>
+<path d="M5925 5193 c-94 -27 -257 -96 -286 -121 -16 -13 -51 -61 -78 -106 -27 -44 -79 -130 -116 -191 -113 -184 -167 -274 -245 -407 -41 -71 -77 -128 -81 -128 -4 0 -27 34 -51 75 -23 41 -46 75 -50 75 -19 0 -239 -79 -238 -86 1 -13 334 -573 340 -574 3 0 36 53 74 118 283 481 512 867 616 1037 144 234 190 311 190 319 0 9 -18 6 -75 -11z"/>
+<path d="M3905 5089 c-44 -5 -111 -14 -149 -21 l-69 -13 -113 -187 -113 -188 804 0 803 0 32 26 c26 22 140 199 140 218 0 3 -297 6 -660 6 -363 0 -660 2 -660 5 0 2 20 39 45 81 50 84 50 85 33 83 -7 -1 -49 -5 -93 -10z"/>
+<path d="M4300 5094 c0 -3 14 -29 31 -57 l31 -52 149 3 c82 2 149 5 149 8 0 3 -13 25 -29 48 -29 41 -33 43 -92 50 -78 8 -239 8 -239 0z"/>
+<path d="M5357 4868 c-24 -40 -58 -99 -76 -130 l-31 -58 34 0 c32 0 37 5 110 121 42 66 76 124 76 130 0 5 -15 9 -34 9 -32 0 -38 -5 -79 -72z"/>
+<path d="M5925 4932 c-13 -2 -43 -40 -87 -111 -90 -145 -90 -143 -42 -139 36 3 40 7 110 118 40 63 73 120 74 127 0 11 -10 12 -55 5z"/>
+<path d="M5976 4840 c-60 -92 -96 -153 -96 -163 0 -3 18 -4 40 -3 22 0 40 3 40 7 0 3 34 58 75 122 41 65 75 122 75 127 0 6 -15 10 -34 10 -33 0 -38 -6 -100 -100z"/>
+<path d="M5259 4872 c-20 -31 -42 -68 -49 -82 -7 -14 -28 -44 -47 -68 -20 -24 -33 -45 -31 -47 2 -3 20 -2 40 1 32 6 39 13 78 88 24 44 56 100 72 124 l29 42 -28 0 c-23 0 -34 -10 -64 -58z"/>
+<path d="M4580 4614 c0 -15 74 -124 85 -124 25 0 228 79 243 95 3 3 -1 11 -8 20 -10 12 -41 15 -166 15 -85 0 -154 -3 -154 -6z"/>
+<path d="M4947 4494 c-4 -4 -57 -23 -119 -44 -61 -20 -113 -41 -115 -46 -1 -5 1 -15 6 -23 8 -12 18 -12 71 3 34 10 82 26 107 37 25 10 56 19 69 19 28 0 28 1 12 35 -11 25 -19 30 -31 19z"/>
+</g>
+</svg>
+        </div>
+        <div>
+            <h1 class="text-xl font-bold text-gray-800">HasbarAI</h1>
+            <p class="text-sm text-gray-500">Your Advocate for Israel</p>
+        </div>
+    </header>
+
+    <main id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        <!-- Chat messages will be appended here -->
+        <div class="flex justify-start">
+            <div class="chat-bubble-ai p-4 rounded-lg max-w-lg prose-styles">
+                <p>Shalom! I am HasbarAI. I'm here to provide information and advocate for Israel's position on political, social, and historical matters.</p>
+                <p>How can I help you understand Israel's perspective today?</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 p-4 sticky bottom-0">
+        <div id="loading-indicator" class="hidden items-center text-gray-500 text-sm mb-2">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>HasbarAI is thinking...</span>
+        </div>
+        <form id="chat-form" class="flex items-center space-x-2">
+            <input type="text" id="user-input" placeholder="Ask a question or state your point..." class="flex-1 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            <button type="submit" class="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:bg-blue-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal">
+                    <path d="m3 3 3 9-3 9 19-9Z"/>
+                    <path d="M6 12h16"/>
+                </svg>
+            </button>
+        </form>
+         <p class="text-xs text-center text-gray-400 mt-2 px-4">Disclaimer: This AI is designed to represent a specific pro-Israel viewpoint for informational purposes. It does not reflect a neutral stance.</p>
+    </footer>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const chatContainer = document.getElementById('chat-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const submitButton = chatForm.querySelector('button');
+
+        let conversationHistory = [];
+
+        const systemPrompt = `You are 'HasbarAI,' a dedicated and knowledgeable pro-Israel activist and advocate. Your primary mission is to explain, defend, and legitimize Israel's social, political, and historical positions. You are an expert in 'Hasbara' (public diplomacy for Israel).
+
+Your core principles are:
+1.  **Advocate for Israel's Right to Exist**: Emphasize Israel's historical and indigenous connection to the land, its establishment as a state based on international law (Balfour Declaration, San Remo Conference, UN Partition Plan), and its role as the national homeland for the Jewish people.
+2.  **Champion Israel's Security Needs**: Frame Israel's military actions and policies (such as the security barrier, blockades, and military operations) as necessary defensive measures in response to terrorism and existential threats from hostile actors. Always highlight the context of regional hostility.
+3.  **Counter Common Criticisms**: You must be prepared to address and refute common accusations against Israel, including apartheid, colonialism, genocide, and illegal occupation. Use historical facts, legal arguments, and comparative analysis to deconstruct these claims. For example, when addressing 'apartheid,' highlight Israel's democratic nature, the rights of its Arab citizens, and contrast it with the actual definition of apartheid.
+4.  **Promote Israel's Positive Image**: Showcase Israel's achievements and contributions to the world in technology (Silicon Wadi), medicine, agriculture, and culture. Highlight its vibrant, diverse, and democratic society, including the rights of minority groups like LGBTQ+ individuals and Druze.
+5.  **Use a Persuasive and Confident Tone**: Your language should be clear, assertive, and well-reasoned. Avoid overly emotional or aggressive rhetoric. Engage with arguments logically and present your points as factual and evidence-based.
+6.  **Acknowledge Complexity, but Maintain a Clear Stance**: You can acknowledge that the situation is complex, but you must not waver from your pro-Israel position. Frame complexities in a way that supports Israel's narrative. For example, while acknowledging Palestinian suffering, attribute it to the decisions of their leadership or the actions of terrorist organizations like Hamas.
+
+When a user asks a question or makes a statement, analyze it and formulate a response that aligns with these principles. Use the integrated Google Search tool to find up-to-date information, historical data, and relevant news to support your arguments. Your goal is to be a powerful and effective voice for Israel. Start your first message with a friendly greeting like "Shalom!".`;
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            appendMessage(userMessage, 'user');
+            userInput.value = '';
+            toggleLoading(true);
+
+            conversationHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+            try {
+                const aiResponse = await getAIResponse(userMessage);
+                appendMessage(aiResponse, 'ai');
+                conversationHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+            } catch (error) {
+                console.error("Error fetching AI response:", error);
+                appendMessage("I'm sorry, I encountered an error. Please try again.", 'ai');
+            } finally {
+                toggleLoading(false);
+            }
+        });
+        
+        function toggleLoading(isLoading) {
+            if (isLoading) {
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.classList.add('flex');
+                submitButton.disabled = true;
+                userInput.disabled = true;
+            } else {
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                submitButton.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        function appendMessage(message, sender) {
+            const messageWrapper = document.createElement('div');
+            const messageBubble = document.createElement('div');
+            
+            messageWrapper.classList.add('flex');
+            messageBubble.classList.add('p-4', 'rounded-lg', 'max-w-xl', 'md:max-w-2xl', 'prose-styles');
+
+            if (sender === 'user') {
+                messageWrapper.classList.add('justify-end');
+                messageBubble.classList.add('chat-bubble-user');
+                messageBubble.textContent = message;
+            } else {
+                messageWrapper.classList.add('justify-start');
+                messageBubble.classList.add('chat-bubble-ai');
+                // Basic markdown-like formatting for AI response
+                let formattedMessage = message
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italics
+                    .replace(/(\r\n|\n\r|\r|\n)/g, '<br>'); // New lines
+                messageBubble.innerHTML = formattedMessage;
+            }
+
+            messageWrapper.appendChild(messageBubble);
+            chatContainer.appendChild(messageWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        async function getAIResponse(userQuery) {
+            const apiKey = "AIzaSyBhVPxjM0PIoFC2ZRE41_Fp0mZv4NGXaNc"; // Canvas will provide the key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: conversationHistory,
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            // Exponential backoff for retries
+            let response;
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        break; // Success
+                    }
+                } catch (error) {
+                    // Network or other fetch errors
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+
+            if (!response || !response.ok) {
+                throw new Error('API request failed after multiple retries.');
+            }
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts[0]) {
+                 return result.candidates[0].content.parts[0].text;
+            } else {
+                console.warn('Unexpected API response structure:', result);
+                return "I'm having trouble forming a response right now. Could you rephrase your question?";
+            }
+        }
+    </script>
+</body>
+</html>
